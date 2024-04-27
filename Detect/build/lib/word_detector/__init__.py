@@ -26,20 +26,7 @@ def detect(img: np.ndarray,
            sigma: float,
            theta: float,
            min_area: int) -> List[DetectorRes]:
-    """Scale space technique for word segmentation proposed by R. Manmatha.
-
-    For details see paper http://ciir.cs.umass.edu/pubfiles/mm-27.pdf.
-
-    Args:
-        img: A grayscale uint8 image.
-        kernel_size: The size of the filter kernel, must be an odd integer.
-        sigma: Standard deviation of Gaussian function used for filter kernel.
-        theta: Approximated width/height ratio of words, filter function is distorted by this factor.
-        min_area: Ignore word candidates smaller than specified area.
-
-    Returns:
-        List of DetectorRes instances, each containing the bounding box and the word image.
-    """
+    
     assert img.ndim == 2
     assert img.dtype == np.uint8
 
@@ -66,7 +53,6 @@ def detect(img: np.ndarray,
 def _compute_kernel(kernel_size: int,
                     sigma: float,
                     theta: float) -> np.ndarray:
-    """Compute anisotropic filter kernel."""
 
     assert kernel_size % 2  # must be odd size
 
@@ -135,16 +121,7 @@ def _cluster_lines(detections: List[DetectorRes],
 def sort_multiline(detections: List[DetectorRes],
                    max_dist: float = 0.7,
                    min_words_per_line: int = 2) -> List[List[DetectorRes]]:
-    """Cluster detections into lines, then sort the lines according to x-coordinates of word centers.
-
-    Args:
-        detections: List of detections.
-        max_dist: Maximum Jaccard distance (0..1) between two y-projected words to be considered as neighbors.
-        min_words_per_line: If a line contains less words than specified, it is ignored.
-
-    Returns:
-        List of lines, each line itself a list of detections.
-    """
+    
     lines = _cluster_lines(detections, max_dist, min_words_per_line)
     res = []
     for line in lines:
@@ -153,5 +130,4 @@ def sort_multiline(detections: List[DetectorRes],
 
 
 def sort_line(detections: List[DetectorRes]) -> List[List[DetectorRes]]:
-    """Sort the list of detections according to x-coordinates of word centers."""
     return [sorted(detections, key=lambda det: det.bbox.x + det.bbox.w / 2)]

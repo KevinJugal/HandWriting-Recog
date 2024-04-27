@@ -155,4 +155,3 @@ def sort_multiline(detections: List[DetectorRes],
 def sort_line(detections: List[DetectorRes]) -> List[List[DetectorRes]]:
     """Sort the list of detections according to x-coordinates of word centers."""
     return [sorted(detections, key=lambda det: det.bbox.x + det.bbox.w / 2)]
-Should
